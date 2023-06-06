@@ -1,0 +1,11 @@
+.sticky {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  transition: all 0.3s;
+  z-index: 9999;
+
+  &.hide {
+    transform: translateY(-100%);
+  }
+}
