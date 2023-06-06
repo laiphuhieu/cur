@@ -1,0 +1,88 @@
+@import '../../assets/styles/referent.scss';
+
+.btn-wrapper {
+  width: 268px;
+  border-radius: 30px;
+  padding: 6px 20px;
+}
+
+.btn {
+  font-size: 16px;
+  line-height: 24px;
+  transition: background-color 0.2s, color 0.2s;
+  font-weight: 400;
+  text-align: center;
+  text-transform: uppercase;
+
+  &.no-uppercase {
+    text-transform: none;
+  }
+
+  &__dark {
+    background-color: $main-black;
+    color: $main-white;
+
+    @include mediaHover {
+      &:hover {
+        background-color: $main-white;
+        color: $main-black;
+      }
+    }
+
+    &:active {
+      background-color: $main-white;
+      color: $main-black;
+    }
+  }
+
+  &__soft-blue {
+    background-color: $soft-blue;
+    color: $main-white;
+
+    @include mediaHover {
+      &:hover {
+        background-color: $main-white;
+        color: $soft-blue;
+      }
+    }
+
+    &:active {
+      background-color: $main-white;
+      color: $soft-blue;
+    }
+  }
+
+  &__bright-blue {
+    background-color: $bright-blue;
+    color: $main-white;
+
+    @include mediaHover {
+      &:hover {
+        background-color: $main-white;
+        color: $bright-blue;
+      }
+    }
+
+    &:active {
+      background-color: $main-white;
+      color: $bright-blue;
+    }
+  }
+
+  &:disabled {
+    background-color: $gray-ghost;
+    color: $main-white;
+  }
+}
+
+.btn-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.disable {
+    pointer-events: none;
+    background-color: $gray-ghost;
+    color: $main-white;
+  }
+}
