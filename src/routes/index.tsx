@@ -24,6 +24,7 @@ import {
 import SamplePage from "@/Pages/SamplePage";
 import CallbackAuth0Page from "@/Pages/CallbackAuth0Page";
 import PageDashboard from "@/Pages/PageDashboard";
+import Instance from "@/Pages/Instance";
 
 const Auth0ProviderWithRedirectCallback = ({
   children,
@@ -72,6 +73,9 @@ const AppRoutes = () => {
         <Route path="/callback" element={<CallbackAuth0Page />} />
         <Route path="/" element={<Navigate to="/dashboard" />} />
         {/* <Route path="*" element={<NotFoundPage />} /> */}
+
+        {/* Sample page */}
+        <Route path="/instance" element={<AuthenticationGuard component={Instance}/>} />
       </Route>
     )
   );
