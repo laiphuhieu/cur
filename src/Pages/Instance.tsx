@@ -83,17 +83,7 @@ const Instance = () => {
       <div style={{ margin: "30px 30px 0 0" }}>
         {count}
         <div>
-          <button
-            onClick={handleIncrease}
-            style={{
-              fontSize: "60%",
-              padding: "16px",
-              marginRight: "5px",
-              backgroundColor: "green",
-              borderRadius: "8%",
-              color: "white",
-            }}
-          >
+          <button onClick={handleIncrease} className="p-[16px] bg-green">
             Increase
           </button>
           <button
