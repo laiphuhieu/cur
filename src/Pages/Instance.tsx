@@ -13,6 +13,7 @@ const temp = {
 
 const Instance = () => {
   const [instances, setInstances] = useState<Item[]>([]);
+  const [count, setCount] = useState(0);
 
   const getItem = useCallback(() => {
     axios.get("https://pokeapi.co/api/v2/item/").then((response) => {
@@ -32,29 +33,96 @@ const Instance = () => {
     setInstances((prev) => prev.slice(0, prev.length - 1));
   }, []);
 
+  const handleIncrease = useCallback(() => {
+    setCount((count) => count + 1);
+  }, []);
+
+  const handleDecrease = useCallback(() => {
+    setCount((count) => Math.max(count - 1, -5));
+  }, []);
+
+  const handleReset = useCallback(() => {
+    setCount(0);
+  }, []);
+
   return (
-    <div>
-      <button
-        onClick={handleClickAdd}
-        style={{ margin: "24px", padding: "36px", background: "#fff" }}
-      >
-        Push to state array
-      </button>
-      <button
-        onClick={handleClickRemove}
-        style={{ margin: "24px", padding: "36px", background: "#fff" }}
-      >
-        Remove last item from array
-      </button>
-      <div>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+      }}
+    >
+      <div style={{ margin: "30px" }}>
+        <div>
+          <button
+            onClick={handleClickAdd}
+            style={{
+              padding: "36px",
+              backgroundColor: "green",
+              margin: "0 24px 50px 0",
+            }}
+          >
+            Push to state array
+          </button>
+          <button
+            onClick={handleClickRemove}
+            style={{ padding: "36px", backgroundColor: "red" }}
+          >
+            Remove last item from array
+          </button>
+        </div>
         {instances.map((result: Item, id: number) => {
-          console.log(result.name);
           return (
             <ul key={id}>
               <li>{result.name}</li>
             </ul>
           );
         })}
+      </div>
+
+      <div style={{ margin: "30px 30px 0 0" }}>
+        {count}
+        <div>
+          <button
+            onClick={handleIncrease}
+            style={{
+              fontSize: "60%",
+              padding: "16px",
+              marginRight: "5px",
+              backgroundColor: "green",
+              borderRadius: "8%",
+              color: "white",
+            }}
+          >
+            Increase
+          </button>
+          <button
+            onClick={handleDecrease}
+            style={{
+              fontSize: "60%",
+              padding: "16px",
+              marginLeft: "5px",
+              backgroundColor: "red",
+              borderRadius: "8%",
+              color: "white",
+            }}
+          >
+            Decrease
+          </button>
+          <button
+            onClick={handleReset}
+            style={{
+              fontSize: "60%",
+              padding: "16px",
+              marginLeft: "5px",
+              backgroundColor: "blue",
+              borderRadius: "8%",
+              color: "white",
+            }}
+          >
+            Reset
+          </button>
+        </div>
       </div>
     </div>
   );
