@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 
+import Button2 from "@/components/Button2/Button2";
+
 interface Item {
   name: string;
   url: string;
@@ -46,30 +48,19 @@ const Instance = () => {
   }, []);
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-      }}
-    >
-      <div style={{ margin: "30px" }}>
-        <div>
-          <button
-            onClick={handleClickAdd}
-            style={{
-              padding: "36px",
-              backgroundColor: "green",
-              margin: "0 24px 50px 0",
-            }}
-          >
-            Push to state array
-          </button>
-          <button
-            onClick={handleClickRemove}
-            style={{ padding: "36px", backgroundColor: "red" }}
-          >
-            Remove last item from array
-          </button>
+    <div className="flex justify-between">
+      <div>
+        <div className="flex mb-[30px]">
+          <Button2
+            action={() => handleClickAdd()}
+            label="Push to state array"
+            color="green"
+          />
+          <Button2
+            action={() => handleClickRemove()}
+            label="Remove last item from array"
+            color="red"
+          />
         </div>
         {instances.map((result: Item, id: number) => {
           return (
@@ -80,38 +71,20 @@ const Instance = () => {
         })}
       </div>
 
-      <div style={{ margin: "30px 30px 0 0" }}>
+      <div>
         {count}
         <div>
-          <button onClick={handleIncrease} className="p-[16px] bg-green">
-            Increase
-          </button>
-          <button
-            onClick={handleDecrease}
-            style={{
-              fontSize: "60%",
-              padding: "16px",
-              marginLeft: "5px",
-              backgroundColor: "red",
-              borderRadius: "8%",
-              color: "white",
-            }}
-          >
-            Decrease
-          </button>
-          <button
-            onClick={handleReset}
-            style={{
-              fontSize: "60%",
-              padding: "16px",
-              marginLeft: "5px",
-              backgroundColor: "blue",
-              borderRadius: "8%",
-              color: "white",
-            }}
-          >
-            Reset
-          </button>
+          <Button2
+            action={() => handleIncrease()}
+            label="Increase"
+            color="green"
+          />
+          <Button2
+            action={() => handleDecrease()}
+            label="Decrease"
+            color="red"
+          />
+          <Button2 action={() => handleReset()} label="Reset" color="blue" />
         </div>
       </div>
     </div>
