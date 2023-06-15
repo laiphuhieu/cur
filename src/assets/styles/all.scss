@@ -2,11 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-@import './plugins/reset';
-@import './variables';
-@import './fonts';
-@import './breakpoints';
-@import './mixins';
+@import "./plugins/reset";
+@import "./variables";
+@import "./fonts";
+@import "./breakpoints";
+@import "./mixins";
 
 * {
   box-sizing: border-box;
@@ -212,7 +212,7 @@ svg {
   border: 1px solid $main-white !important;
 }
 
-.filepond--panel[data-scalable='true'] {
+.filepond--panel[data-scalable="true"] {
   background-color: $gray !important;
   border: 1px solid $main-white !important;
 }
