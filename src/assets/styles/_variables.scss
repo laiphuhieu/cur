@@ -14,12 +14,16 @@ $gray5: #dcd9da;
 $red: #ff0000;
 
 $gradient1: linear-gradient(180deg, #aecce1 0%, #dcd9da 100%);
-$gradient-2: linear-gradient(180deg, #ffffff 51.74%, rgba(255, 255, 255, 0) 100%);
+$gradient-2: linear-gradient(
+  180deg,
+  #ffffff 51.74%,
+  rgba(255, 255, 255, 0) 100%
+);
 
 // ==========================================================================
 // Font
 // ==========================================================================
-$font-poppins: 'Poppins';
+$font-poppins: "Poppins";
 
 $font-light: 300;
 $font-regular: 400;
@@ -39,3 +43,7 @@ $break-sm: 600px;
 $dot: 0.1px;
 
 $cubic1: cubic-bezier(0.64, 0.57, 0.67, 1.53);
+
+:root {
+  --toastify-toast-max-height: 100%;
+}
