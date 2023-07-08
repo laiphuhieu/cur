@@ -1,0 +1,22 @@
+.position-title {
+  align-items: center;
+  background-color: #dcd9da;
+  bottom: 21px;
+  display: flex;
+  left: 195px;
+  padding-left: 16px;
+  position: absolute;
+  top: 1px;
+  width: 48px;
+}
+
+.position-input {
+  background-color: #e5eaee;
+  border: 1px solid #fff;
+  font-size: 16px;
+  line-height: 24px;
+  outline: none;
+  padding: 7px 36px 7px 66px;
+  transition: border-color 0.2s;
+  width: 100%;
+}

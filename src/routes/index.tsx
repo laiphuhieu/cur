@@ -25,6 +25,9 @@ import SamplePage from "@/Pages/SamplePage";
 import CallbackAuth0Page from "@/Pages/CallbackAuth0Page";
 import PageDashboard from "@/Pages/PageDashboard";
 import Instance from "@/Pages/Instance";
+import World from "@/Pages/World";
+import Galleries from "@/Pages/Galleries";
+import MessageBalls from "@/Pages/MessageBalls";
 
 const Auth0ProviderWithRedirectCallback = ({
   children,
@@ -75,7 +78,22 @@ const AppRoutes = () => {
         {/* <Route path="*" element={<NotFoundPage />} /> */}
 
         {/* Sample page */}
-        <Route path="/instance" element={<AuthenticationGuard component={Instance}/>} />
+        <Route
+          path="/instance"
+          element={<AuthenticationGuard component={Instance} />}
+        />
+        <Route
+          path="/world"
+          element={<AuthenticationGuard component={World} />}
+        />
+        <Route
+          path="/gallery"
+          element={<AuthenticationGuard component={Galleries} />}
+        />
+        <Route
+          path="message"
+          element={<AuthenticationGuard component={MessageBalls} />}
+        />
       </Route>
     )
   );

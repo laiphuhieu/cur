@@ -28,7 +28,7 @@ const Button2 = ({ action, label, color }: ButtonProps) => {
     <>
       <button
         onClick={handleClick}
-        className={`${styles["btn"]} ${buttonColorStyle}`}
+        className={`${styles["btn"]} ${buttonColorStyle} `}
       >
         {label}
       </button>
