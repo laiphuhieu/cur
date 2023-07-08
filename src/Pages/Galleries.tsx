@@ -1,28 +1,8 @@
-import React, { useState, useEffect, useCallback } from "react";
-
-import { Formik, Form, Field, FieldArray, ErrorMessage } from "formik";
-import * as Yup from "yup";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 
 import useGetAccessToken from "@/custom-hooks/useGetAccessToken";
 import worldServices from "@/services/worldServices";
 import galleriesServices from "@/services/galleriesServices";
-
-const initialValues = {
-  galleryTitle: "",
-  mediaGalleryType: "",
-  logo: "",
-  worldName: "",
-
-  links: [
-    {
-      linkType: "",
-      linkURL: "",
-      openNewTab: false,
-      customLinkTitle: "",
-      customLinkDescription: "",
-    },
-  ],
-};
 
 const Galleries = () => {
   const token = useGetAccessToken();
@@ -52,45 +32,16 @@ const Galleries = () => {
     getAllGalleries();
   }, [getAllGalleries, getAllWorld]);
 
-  // const handleData = useCallback(async () => {
-  //   const [resGallery, resWorld] = await Promise.allSettled([
-  //     axios.get("https://stagingapi.curiious.com/v1/ActiveMediaGalleries"),
-  //     axios.get("https://stagingapi.curiious.com/v1/Worlds"),
-  //   ]);
-  //   const dataGallery = await resGallery;
-  //   const dataWorld = await resWorld;
-
-  //   console.log(dataGallery);
-  //   console.log(dataWorld);
-  // }, []);
-
-  // useEffect(() => {
-  //   handleData();
-  // }, [handleData]);
-
-  // const merged = worlds.map((world: any) => {
-  //   const resGalleries = galleries.find(
-  //     (gallery: any) => gallery.id === world.id
-  //   );
-
-  //   return { ...world, ...resGalleries };
-  // });
-
-  // console.log(merged);
-
-  // const worldName =
-  //   worlds.map((world: any) => world.id === gallery.world)?.name || "";
-
   function handleRemove(id: number) {
     setGalleries(galleries.filter((gallery: any) => gallery.id !== id));
   }
 
-  // const handleRemove = useCallback(
-  //   (id: any) => {
-  //     setGalleries(galleries.filter((gallery: any) => gallery.id !== id));
-  //   },
-  //   [setGalleries]
-  // );
+  const worldData = useMemo(() => {
+    return worlds.map((world: any) => {
+      return world.gallery;
+    });
+  }, [worlds]);
+  console.log(worldData);
 
   return (
     <div>
@@ -271,198 +222,6 @@ const Galleries = () => {
           </div>
         </div>
       </div>
-
-      <Formik
-        initialValues={initialValues}
-        onSubmit={async (values) => {
-          console.log(values);
-        }}
-        validationSchema={Yup.object({
-          galleryTitle: Yup.string().max(125).required(),
-          mediaGalleryType: Yup.string().required(),
-          worldName: Yup.string().required(),
-          linkType: Yup.string().required(),
-          linkURL: Yup.string().required(),
-          openNewTab: Yup.bool().oneOf([true]),
-          customLinkTitle: Yup.string().max(50),
-          customLinkDescription: Yup.string().max(320),
-        })}
-      >
-        {({ values, errors, touched }) => (
-          <Form>
-            <div>
-              <span>Gallery Title</span>
-              <Field
-                type="text"
-                name="galleryTitle"
-                className={
-                  errors.galleryTitle && touched.galleryTitle ? "error" : null
-                }
-              />
-            </div>
-            <div>
-              <span>Media Gallery Type</span>
-              <Field
-                as="select"
-                name="mediaGalleryType"
-                className={
-                  errors.mediaGalleryType && touched.mediaGalleryType
-                    ? "error"
-                    : null
-                }
-              >
-                <option value="">-- Drop down to select</option>
-                <option value="3D Model AMG">3D Model AMG</option>
-                <option value="Default AMG (Depreciated)">
-                  Default AMG (Depreciated)
-                </option>
-                <option value="3D Model AMG">3D Model AMG</option>
-                <option value="Default AMG (Depreciated)">
-                  Default AMG (Depreciated)
-                </option>
-              </Field>
-            </div>
-            <div>
-              <span>Logo (optional)</span>
-              <Field
-                type="file"
-                name="logo"
-                className={errors.logo && touched.logo ? "error" : null}
-              />
-            </div>
-            <div>
-              <span>World Name</span>
-              <Field
-                as="select"
-                name="worldName"
-                className={
-                  errors.worldName && touched.worldName ? "error" : null
-                }
-              >
-                <option value="">-- Drop down to select</option>
-                <option value="A world without audio">
-                  A world without audio
-                </option>
-                <option value="aaaaaaaaaaaa">aaaaaaaaaaaa</option>
-                <option value="FuturisticRoom">FuturisticRoom</option>
-                <option value="Johnson & Johnson MedTech">
-                  Johnson & Johnson MedTech
-                </option>
-              </Field>
-            </div>
-            <h1>LINKS</h1>
-            <FieldArray name="links">
-              {({ remove, push }: { remove: any; push: any }) => (
-                <div>
-                  {values.links.length > 0 &&
-                    values.links.map((link, index) => (
-                      <div className="row" key={index}>
-                        <div className="col">
-                          <label htmlFor={`links.${index}.linkType`}>
-                            Link Type
-                          </label>
-                          <Field name={`links.${index}.linkType`} as="select">
-                            <ErrorMessage
-                              name={`friends.${index}.linkType`}
-                              component="div"
-                              className="error"
-                            />
-                            <option value="">-- Drop down to select</option>
-                            <option value="A world without audio">
-                              A world without audio
-                            </option>
-                            <option value="aaaaaaaaaaaa">aaaaaaaaaaaa</option>
-                            <option value="FuturisticRoom">
-                              FuturisticRoom
-                            </option>
-                            <option value="Johnson & Johnson MedTech">
-                              Johnson & Johnson MedTech
-                            </option>
-                          </Field>
-                        </div>
-
-                        <div className="col">
-                          <label htmlFor={`links.${index}.linkURL`}>
-                            Link URL
-                          </label>
-                          <Field
-                            name={`links.${index}.linkURL`}
-                            placeholder="https://www.website.com"
-                            type="email"
-                          />
-                          <ErrorMessage
-                            name={`friends.${index}.linkURL`}
-                            component="div"
-                            className="error"
-                          />
-                        </div>
-                        <div className="col">
-                          <label htmlFor={`links.${index}.openNewTab`}>
-                            Open New Tab
-                          </label>
-                          <Field
-                            name={`links.${index}.openNewTab`}
-                            type="checkbox"
-                          />
-                        </div>
-
-                        <div className="col">
-                          <label htmlFor={`links.${index}.customLinkTitle`}>
-                            Custom Link Title
-                          </label>
-                          <Field
-                            name={`links.${index}.customLinkTitle`}
-                            type="text"
-                            placeholder="Maximum 50 characters"
-                          />
-                        </div>
-
-                        <div className="col">
-                          <label
-                            htmlFor={`links.${index}.customLinkDescription`}
-                          >
-                            Custom Link Description
-                          </label>
-                          <Field
-                            name={`links.${index}.customLinkDescription`}
-                            type="text"
-                            placeholder="Maximum 320 characters"
-                          />
-                        </div>
-
-                        <div className="col">
-                          <button
-                            type="button"
-                            className="secondary"
-                            onClick={() => remove(index)}
-                          >
-                            Delete Link
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  <button
-                    type="button"
-                    className="secondary"
-                    onClick={() =>
-                      push({
-                        linkType: "",
-                        linkURL: "",
-                        openNewTab: "",
-                        customLinkTitle: "",
-                        customLinkDescription: "",
-                      })
-                    }
-                  >
-                    Add Link
-                  </button>
-                </div>
-              )}
-            </FieldArray>
-            <button type="submit">Create Gallery</button>
-          </Form>
-        )}
-      </Formik>
     </div>
   );
 };
