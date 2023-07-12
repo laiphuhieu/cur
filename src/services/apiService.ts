@@ -26,7 +26,7 @@ const axiosInstance = (
   instance.interceptors.response.use(
     (response) => {
       if (isFullAxiosResponse) return response;
-      return response.data;
+      return response.data as any;
     },
     (error) => {
       return Promise.reject(error?.response);

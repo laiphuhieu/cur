@@ -1,38 +1,25 @@
 import React, { useState, useEffect, useCallback } from "react";
-
-import { Formik, Form, Field, FieldArray, ErrorMessage } from "formik";
-import * as Yup from "yup";
+import { Link } from "react-router-dom";
 
 import useGetAccessToken from "@/custom-hooks/useGetAccessToken";
 import worldServices from "@/services/worldServices";
 import galleriesServices from "@/services/galleriesServices";
-
-const initialValues = {
-  galleryTitle: "",
-  mediaGalleryType: "",
-  logo: "",
-  worldName: "",
-
-  links: [
-    {
-      linkType: "",
-      linkURL: "",
-      openNewTab: false,
-      customLinkTitle: "",
-      customLinkDescription: "",
-    },
-  ],
-};
+import Spinner from "@/components/Spinner/Spinner";
+import { Gallery } from "@/types/gallery";
+import { Worlds } from "@/types/worlds";
 
 const Galleries = () => {
   const token = useGetAccessToken();
-  const [galleries, setGalleries] = useState<any>([]);
-  const [worlds, setWorlds] = useState<any>([]);
+  const [galleries, setGalleries] = useState<Gallery[] | any>([]);
+  const [worlds, setWorlds] = useState<Worlds[] | any>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const getAllGalleries = useCallback(async () => {
     try {
+      setIsLoading(true);
       const instanceData = await galleriesServices.getAllGalleries(token);
       setGalleries(instanceData);
+      setIsLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -40,8 +27,10 @@ const Galleries = () => {
 
   const getAllWorld = useCallback(async () => {
     try {
+      setIsLoading(true);
       const worldData = await worldServices.getAllWorld(token);
       setWorlds(worldData);
+      setIsLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -52,47 +41,13 @@ const Galleries = () => {
     getAllGalleries();
   }, [getAllGalleries, getAllWorld]);
 
-  // const handleData = useCallback(async () => {
-  //   const [resGallery, resWorld] = await Promise.allSettled([
-  //     axios.get("https://stagingapi.curiious.com/v1/ActiveMediaGalleries"),
-  //     axios.get("https://stagingapi.curiious.com/v1/Worlds"),
-  //   ]);
-  //   const dataGallery = await resGallery;
-  //   const dataWorld = await resWorld;
-
-  //   console.log(dataGallery);
-  //   console.log(dataWorld);
-  // }, []);
-
-  // useEffect(() => {
-  //   handleData();
-  // }, [handleData]);
-
-  // const merged = worlds.map((world: any) => {
-  //   const resGalleries = galleries.find(
-  //     (gallery: any) => gallery.id === world.id
-  //   );
-
-  //   return { ...world, ...resGalleries };
-  // });
-
-  // console.log(merged);
-
-  // const worldName =
-  //   worlds.map((world: any) => world.id === gallery.world)?.name || "";
-
-  function handleRemove(id: number) {
-    setGalleries(galleries.filter((gallery: any) => gallery.id !== id));
+  function handleRemove(id: number | string) {
+    setGalleries(galleries?.filter((gallery: Gallery) => gallery.id !== id));
   }
 
-  // const handleRemove = useCallback(
-  //   (id: any) => {
-  //     setGalleries(galleries.filter((gallery: any) => gallery.id !== id));
-  //   },
-  //   [setGalleries]
-  // );
-
-  return (
+  return isLoading ? (
+    <Spinner />
+  ) : (
     <div>
       <div className=" px-[15px] md:px-[50px]">
         <div className="max-w-[1340px] w-full mx-auto md:pl-[24px]">
@@ -126,7 +81,7 @@ const Galleries = () => {
                 </thead>
 
                 <tbody>
-                  {galleries.map((gallery: any, id: number) => {
+                  {galleries?.map((gallery: Gallery, id: number) => {
                     return (
                       <tr
                         key={id}
@@ -145,14 +100,14 @@ const Galleries = () => {
 
                         <td className="max-w-[226px]">
                           <p>
-                            <a
-                              href="#"
+                            <Link
+                              to={`/gallery/edit/${gallery.id}`}
                               className="underline underline-offset-2 transition-all hover:text-soft-blue"
                             >
                               {worlds.find(
-                                (world: any) => world.id === gallery.world
+                                (world: Worlds) => world.id === gallery.world
                               )?.name || ""}
-                            </a>
+                            </Link>
                           </p>
                         </td>
                         <td className="flex justify-center">
@@ -166,7 +121,7 @@ const Galleries = () => {
                         </td>
                         <td className="align-middle">
                           <div className="flex justify-center align-middle cursor-pointer">
-                            <a href="/gallery/edit">
+                            <Link to={`/gallery/edit/${gallery.id}`}>
                               <svg
                                 width="30"
                                 height="30"
@@ -181,7 +136,7 @@ const Galleries = () => {
                                   fill="black"
                                 ></path>
                               </svg>
-                            </a>
+                            </Link>
                           </div>
                         </td>
                         <td className="align-middle">
@@ -271,200 +226,7 @@ const Galleries = () => {
           </div>
         </div>
       </div>
-
-      <Formik
-        initialValues={initialValues}
-        onSubmit={async (values) => {
-          console.log(values);
-        }}
-        validationSchema={Yup.object({
-          galleryTitle: Yup.string().max(125).required(),
-          mediaGalleryType: Yup.string().required(),
-          worldName: Yup.string().required(),
-          linkType: Yup.string().required(),
-          linkURL: Yup.string().required(),
-          openNewTab: Yup.bool().oneOf([true]),
-          customLinkTitle: Yup.string().max(50),
-          customLinkDescription: Yup.string().max(320),
-        })}
-      >
-        {({ values, errors, touched }) => (
-          <Form>
-            <div>
-              <span>Gallery Title</span>
-              <Field
-                type="text"
-                name="galleryTitle"
-                className={
-                  errors.galleryTitle && touched.galleryTitle ? "error" : null
-                }
-              />
-            </div>
-            <div>
-              <span>Media Gallery Type</span>
-              <Field
-                as="select"
-                name="mediaGalleryType"
-                className={
-                  errors.mediaGalleryType && touched.mediaGalleryType
-                    ? "error"
-                    : null
-                }
-              >
-                <option value="">-- Drop down to select</option>
-                <option value="3D Model AMG">3D Model AMG</option>
-                <option value="Default AMG (Depreciated)">
-                  Default AMG (Depreciated)
-                </option>
-                <option value="3D Model AMG">3D Model AMG</option>
-                <option value="Default AMG (Depreciated)">
-                  Default AMG (Depreciated)
-                </option>
-              </Field>
-            </div>
-            <div>
-              <span>Logo (optional)</span>
-              <Field
-                type="file"
-                name="logo"
-                className={errors.logo && touched.logo ? "error" : null}
-              />
-            </div>
-            <div>
-              <span>World Name</span>
-              <Field
-                as="select"
-                name="worldName"
-                className={
-                  errors.worldName && touched.worldName ? "error" : null
-                }
-              >
-                <option value="">-- Drop down to select</option>
-                <option value="A world without audio">
-                  A world without audio
-                </option>
-                <option value="aaaaaaaaaaaa">aaaaaaaaaaaa</option>
-                <option value="FuturisticRoom">FuturisticRoom</option>
-                <option value="Johnson & Johnson MedTech">
-                  Johnson & Johnson MedTech
-                </option>
-              </Field>
-            </div>
-            <h1>LINKS</h1>
-            <FieldArray name="links">
-              {({ remove, push }: { remove: any; push: any }) => (
-                <div>
-                  {values.links.length > 0 &&
-                    values.links.map((link, index) => (
-                      <div className="row" key={index}>
-                        <div className="col">
-                          <label htmlFor={`links.${index}.linkType`}>
-                            Link Type
-                          </label>
-                          <Field name={`links.${index}.linkType`} as="select">
-                            <ErrorMessage
-                              name={`friends.${index}.linkType`}
-                              component="div"
-                              className="error"
-                            />
-                            <option value="">-- Drop down to select</option>
-                            <option value="A world without audio">
-                              A world without audio
-                            </option>
-                            <option value="aaaaaaaaaaaa">aaaaaaaaaaaa</option>
-                            <option value="FuturisticRoom">
-                              FuturisticRoom
-                            </option>
-                            <option value="Johnson & Johnson MedTech">
-                              Johnson & Johnson MedTech
-                            </option>
-                          </Field>
-                        </div>
-
-                        <div className="col">
-                          <label htmlFor={`links.${index}.linkURL`}>
-                            Link URL
-                          </label>
-                          <Field
-                            name={`links.${index}.linkURL`}
-                            placeholder="https://www.website.com"
-                            type="email"
-                          />
-                          <ErrorMessage
-                            name={`friends.${index}.linkURL`}
-                            component="div"
-                            className="error"
-                          />
-                        </div>
-                        <div className="col">
-                          <label htmlFor={`links.${index}.openNewTab`}>
-                            Open New Tab
-                          </label>
-                          <Field
-                            name={`links.${index}.openNewTab`}
-                            type="checkbox"
-                          />
-                        </div>
-
-                        <div className="col">
-                          <label htmlFor={`links.${index}.customLinkTitle`}>
-                            Custom Link Title
-                          </label>
-                          <Field
-                            name={`links.${index}.customLinkTitle`}
-                            type="text"
-                            placeholder="Maximum 50 characters"
-                          />
-                        </div>
-
-                        <div className="col">
-                          <label
-                            htmlFor={`links.${index}.customLinkDescription`}
-                          >
-                            Custom Link Description
-                          </label>
-                          <Field
-                            name={`links.${index}.customLinkDescription`}
-                            type="text"
-                            placeholder="Maximum 320 characters"
-                          />
-                        </div>
-
-                        <div className="col">
-                          <button
-                            type="button"
-                            className="secondary"
-                            onClick={() => remove(index)}
-                          >
-                            Delete Link
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  <button
-                    type="button"
-                    className="secondary"
-                    onClick={() =>
-                      push({
-                        linkType: "",
-                        linkURL: "",
-                        openNewTab: "",
-                        customLinkTitle: "",
-                        customLinkDescription: "",
-                      })
-                    }
-                  >
-                    Add Link
-                  </button>
-                </div>
-              )}
-            </FieldArray>
-            <button type="submit">Create Gallery</button>
-          </Form>
-        )}
-      </Formik>
     </div>
   );
 };
-
 export default Galleries;
