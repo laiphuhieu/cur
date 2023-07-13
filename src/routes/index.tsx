@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, lazy, Suspense } from "react";
+import React, { PropsWithChildren } from "react";
 import {
   Route,
   useNavigate,
@@ -24,13 +24,13 @@ import {
 import SamplePage from "@/Pages/SamplePage";
 import CallbackAuth0Page from "@/Pages/CallbackAuth0Page";
 import PageDashboard from "@/Pages/PageDashboard";
-import Instance from "@/Pages/Instance";
-import World from "@/Pages/World";
-import Galleries from "@/Pages/Galleries";
-import EditGallery from "@/Pages/EditGallery";
-import MessageBalls from "@/Pages/MessageBalls";
-
-const LazyGallery = React.lazy(() => import("@/Pages/Galleries"));
+import Instance from "@/Pages/Instance/Instance";
+import World from "@/Pages/World/World";
+import Galleries from "@/Pages/Gallery/Galleries";
+import EditGallery from "@/Pages/Gallery/EditGallery";
+import MessageBalls from "@/Pages/MessageBalls/MessageBalls";
+import Recoil from "@/Pages/Recoil/Recoil";
+// const LazyGallery = React.lazy(() => import("@/Pages/Galleries"));
 
 const Auth0ProviderWithRedirectCallback = ({
   children,
@@ -92,11 +92,6 @@ const AppRoutes = () => {
         <Route
           path="/gallery"
           element={<AuthenticationGuard component={Galleries} />}
-          // element={
-          //   <Suspense fallback={<div> Please Wait... </div>}>
-          //     <LazyGallery />
-          //   </Suspense>
-          // }
         />
         <Route
           path="/gallery/edit/:galleryId"
@@ -106,6 +101,7 @@ const AppRoutes = () => {
           path="message"
           element={<AuthenticationGuard component={MessageBalls} />}
         />
+        <Route path="recoil" element={<Recoil />} />
       </Route>
     )
   );

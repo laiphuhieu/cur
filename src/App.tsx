@@ -1,10 +1,14 @@
 import React from "react";
+import { RecoilRoot } from "recoil";
+
 import AppRoutes from "./routes";
-import { BASE_URL } from '@/config/app.config';
 
 function App() {
-  console.log(BASE_URL);
-  return <AppRoutes />;
+  return (
+    <RecoilRoot>
+      <AppRoutes />
+    </RecoilRoot>
+  );
 }
 
 export default App;
